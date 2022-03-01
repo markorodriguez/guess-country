@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Modal({isOpen, clickOnBackdrop, children}:any)  {
+export default function Modal({isOpen, children}:any)  {
    
     return (
         <React.Fragment>
