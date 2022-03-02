@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import ButtonNoLink from "../components/Buttons/ButtonNoLink";
 import Container from "../components/Container/Container";
 import Image from "next/image";
+import Button from "../components/Buttons/Button";
 
 export default function game() {
   const [username, setUsername] = React.useState("El Pepe");
@@ -12,6 +13,8 @@ export default function game() {
   const [isNameConfirmed, setIsNameConfirmed] = React.useState(false);
   const [isGameStarted, setIsGameStarted] = React.useState(false);
   const [chosenRegion, setChosenRegion] = React.useState(" ");
+  const [isNotFinished, setIsFinished] = React.useState(true);
+  
   
   const regions = [
     {
@@ -27,8 +30,8 @@ export default function game() {
       value: "asia",
     },
     {
-        name: "Americas",
-        value: "americas",
+      name: "Americas",
+      value: "americas",
     },
     {
       name: "Europe",
@@ -46,6 +49,10 @@ export default function game() {
     setIsOpen(false);
   };
 
+  const getIsNotFinished = (isFinished: boolean) => {
+    setIsFinished(isFinished);
+  }
+
   return (
     <Layout>
       <Modal isOpen={isOpen}>
@@ -55,18 +62,28 @@ export default function game() {
         {isNameConfirmed ? (
           <div className="text-custom_white text-center  ">
             <p className="text-lg my-4">
-              Oh, so you're <span className="font-semibold underline underline-offset-8 decoration-4">{username}</span>.
+              Oh, so you are{" "}
+              <span className="font-semibold underline underline-offset-8 decoration-4">
+                {username}
+              </span>
+              .
             </p>
             <div className="text-lg text-dark_color">
               <p className="my-4 font-semibold">Choose a region:</p>
               <div className="grid text-dark_color grid-cols-2 w-full">
-                {regions.map((el, index) => <ButtonNoLink key={index} getValue={getRegion} value={el.value} text={el.name} />)}
+                {regions.map((el, index) => (
+                  <ButtonNoLink
+                    key={index}
+                    getValue={getRegion}
+                    value={el.value}
+                    text={el.name}
+                  />
+                ))}
               </div>
             </div>
           </div>
         ) : (
           <>
-            {" "}
             <p className="text-center text-lg text-custom_white my-4">
               I want to know your name!
             </p>
@@ -98,16 +115,38 @@ export default function game() {
           </>
         )}
       </Modal>
-      <div id="game-page" className="min-h-screen flex items-center justify-center">
-       {isGameStarted ? 
-           <Container region={chosenRegion}/>
-        : <div>
-            <Image  placeholder="blur"
-            blurDataURL="/img/worried.png"
-            src="/img/worried.png"
-            width={200}
-            height={200} />   
-        </div>} 
+      <div
+        id="game-page"
+        className="min-h-screen flex items-center justify-center"
+      >
+        {isGameStarted && isNotFinished ? (
+          <Container isNotFinished={getIsNotFinished} username={username} region={chosenRegion} />
+        ) : <>
+              { isGameStarted && !isNotFinished ? <div className="flex w-auto h-full flex-col">
+                <Image
+                src="/img/thinkinggif.gif"
+                alt="thinking"
+                width={300}
+                height={300}
+
+                placeholder="blur"
+                blurDataURL="/img/thinkinggif.gif"
+              /> 
+
+              <span className="text-4xl text-center text-dark_color">Game Over</span>
+
+              <p className="text-center my-3 text-lg">Score: <span className="text-custom_white font-semibold">pipipipi</span>  </p>
+              
+              <div className="text-xl mt-2 flex flex-col w-full text-dank_brown h-auto">
+              <Button text="Play again" href="/game"/>
+              <Button text="See leaderboard" href="/leaderboard"/>
+              </div>
+             
+              </div> : <p>
+                imagen random
+              </p> }
+        </>
+        }
       </div>
     </Layout>
   );
