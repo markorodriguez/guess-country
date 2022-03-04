@@ -8,14 +8,19 @@ import Answer from "../MessagesModal/Answer";
 
 const _ = require("lodash");
 
-export default function Container({ region, username, isNotFinished }: any) {
+export default function Container({
+  region,
+  right,
+  rightCounter,
+  username,
+  isNotFinished,
+  initalizeFinish,
+}: any) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [questions, setQuestions]: any = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isRight, setIsRight] = React.useState(false);
   const [currentIndex, setCurrentIndex] = React.useState(0);
-
-  
 
   React.useEffect(() => {
     let urlApi;
@@ -37,56 +42,52 @@ export default function Container({ region, username, isNotFinished }: any) {
           }
         }
 
+        const arrayBase = _.shuffle(curatedArray);
 
-        const allQuestions = [];
+        const preguntasUsar = arrayBase.slice(0, 10);
+        const arrayLibreDeUsadas = arrayBase.slice(10, arrayBase.length);
 
-        for (let i = 0; i <= 9; i++) {
-          const loopedShuffledArray = _.shuffle(curatedArray);
-          
+        const questionsGame: any = [];
 
-
-          const loopedAndFiltered = loopedShuffledArray.slice(1, loopedShuffledArray.length);
-
-
-          const questionGame = {
-            country: loopedShuffledArray[0].name.common,
-            answers: [
+        for (let j = 0; j < preguntasUsar.length; j++) {
+          const loopedArray = _.shuffle(arrayLibreDeUsadas);
+          const question = {
+            question: preguntasUsar[j].name.common,
+            options: [
               {
-                cityName: loopedShuffledArray[0].capital,
+                city: preguntasUsar[j].capital[0],
               },
               {
-                cityName: loopedAndFiltered[i + 1].capital,
+                city: loopedArray[j].capital[0],
               },
               {
-                cityName: loopedAndFiltered[i + 2].capital,
+                city: loopedArray[j + 1].capital[0],
               },
               {
-                cityName: loopedAndFiltered[i + 3].capital,
+                city: loopedArray[j + 2].capital[0],
               },
             ],
           };
-
-          allQuestions.push(questionGame);
+          questionsGame.push(question);
         }
 
-        setQuestions(allQuestions);
+        setQuestions(questionsGame);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
         toast.error("Ha ocurrido un error");
       });
-  }, []);
+  }, [region]);
 
   const nextQuestion = () => {
     console.log(currentIndex, "currentIndex");
 
-    if(currentIndex+1 >= questions.length){
-      alert('Game Over')
+    if (currentIndex + 1 >= questions.length) {
+      initalizeFinish();
       setIsOpen(false);
       isNotFinished(false);
-    } 
-    
+    }
 
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -96,9 +97,10 @@ export default function Container({ region, username, isNotFinished }: any) {
   };
 
   const getValue = (value: any) => {
-    if (value === questions[currentIndex].answers[0].cityName[0]) {
+    if (value === questions[currentIndex].options[0].city) {
       setIsOpen(true);
       setIsRight(true);
+      right();
     } else {
       setIsOpen(true);
       setIsRight(false);
@@ -108,7 +110,6 @@ export default function Container({ region, username, isNotFinished }: any) {
   const clickOnBackdrop = () => {
     setIsOpen(false);
   };
-
 
   return (
     <div className="h-screen w-full flex justify-center items-center">
@@ -129,6 +130,7 @@ export default function Container({ region, username, isNotFinished }: any) {
           src="/img/worried.png"
           width={200}
           height={200}
+          alt="worried"
         />
       ) : (
         <div className="mx-auto  w-5/6 md:w-3/6 text-center">
@@ -137,21 +139,25 @@ export default function Container({ region, username, isNotFinished }: any) {
           </h4>
           <p className="text-3xl mt-4 mb-8 font-semibold  text-custom_white">
             {" "}
-            {questions[currentIndex].country}
+            {questions[currentIndex].question}
           </p>
           <div className="sm:w-4/6 text-lg mx-auto">
-            {_.shuffle(questions[currentIndex].answers).map(
+            {_.shuffle(questions[currentIndex].options).map(
               (el: any, index: number) => {
                 return (
                   <ButtonNoLink
                     getValue={getValue}
-                    value={el.cityName[0]}
-                    text={el.cityName[0]}
+                    value={el.city}
+                    text={el.city}
                     key={index}
                   ></ButtonNoLink>
                 );
               }
             )}
+            <p className="text-white mt-6">
+              Question: {currentIndex + 1} of {questions.length}
+            </p>
+            <p>Right questions : {rightCounter}</p>
           </div>
         </div>
       )}

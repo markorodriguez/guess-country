@@ -13,6 +13,7 @@ export default function Answer({ nextQuestion, clickOnBackdrop, isRight, usernam
                         blurDataURL="/img/right.png"
                         width={200}
                         height={200}
+                        alt={'right'}
                     />
                     <div className="flex text-lg items-center text-center flex-col w-full">
                         <p className="text-3xl my-2  font-semibold text-green-500">
@@ -22,8 +23,8 @@ export default function Answer({ nextQuestion, clickOnBackdrop, isRight, usernam
                             Well done, <span className="font-semibold">{username}</span>{" "}
                         </p>
                         <p className="my-4 font-medium">
-                            The capital of <span className="font-semibold text-custom_white">{answer.country}</span> is{" "}
-                            <span className="font-semibold text-custom_white">{answer.answers[0].cityName[0]}.</span>{" "}
+                            The capital of <span className="font-semibold text-custom_white">{answer.question}</span> is{" "}
+                            <span className="font-semibold text-custom_white">{answer.options[0].city}.</span>{" "}
                         </p>
 
                         <button onClick={()=>{
@@ -43,6 +44,7 @@ export default function Answer({ nextQuestion, clickOnBackdrop, isRight, usernam
                         blurDataURL="/img/wrong.png"
                         width={200}
                         height={200}
+                        alt={'wrong'}
                     />
 
                     <div className="flex text-lg items-center text-center flex-col w-full">
@@ -53,8 +55,8 @@ export default function Answer({ nextQuestion, clickOnBackdrop, isRight, usernam
                             Nice try, <span className="font-semibold">{username}</span>{" "}
                         </p>
                         <p className="my-4 font-medium">
-                            The capital of <span className="font-semibold text-custom_white">{answer.country}</span> is{" "}
-                            <span className="font-semibold text-custom_white">{answer.answers[0].cityName[0]}.</span>{" "}
+                            The capital of <span className="font-semibold text-custom_white">{answer.question}</span> is{" "}
+                            <span className="font-semibold text-custom_white">{answer.options[0].city}.</span>{" "}
                         </p>
 
                         <button onClick={()=>{

@@ -6,16 +6,37 @@ import ButtonNoLink from "../components/Buttons/ButtonNoLink";
 import Container from "../components/Container/Container";
 import Image from "next/image";
 import Button from "../components/Buttons/Button";
+import axios from "axios";
 
-export default function game() {
-  const [username, setUsername] = React.useState("El Pepe");
+export default function Game() {
+  const [username, setUsername] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(true);
   const [isNameConfirmed, setIsNameConfirmed] = React.useState(false);
   const [isGameStarted, setIsGameStarted] = React.useState(false);
   const [chosenRegion, setChosenRegion] = React.useState(" ");
   const [isNotFinished, setIsFinished] = React.useState(true);
-  
-  
+  const [rightQuestions, setRightQuestions] = React.useState(0);
+
+  const increaseRightQuestions = () => {
+    setRightQuestions(rightQuestions + 1);
+  }
+
+
+  const initalizeFinish = () => {
+
+    const data = {
+      username: username,
+      score: rightQuestions,
+    }
+
+    axios.post("/api/sendScores", data).then((res)=>{
+      console.log(res.data)
+    }).catch((err)=>{
+      console.log(err)
+      console.log('error')
+    })
+  };
+
   const regions = [
     {
       name: "The world",
@@ -47,11 +68,12 @@ export default function game() {
     setChosenRegion(region);
     setIsGameStarted(true);
     setIsOpen(false);
+
   };
 
   const getIsNotFinished = (isFinished: boolean) => {
     setIsFinished(isFinished);
-  }
+  };
 
   return (
     <Layout>
@@ -120,33 +142,47 @@ export default function game() {
         className="min-h-screen flex items-center justify-center"
       >
         {isGameStarted && isNotFinished ? (
-          <Container isNotFinished={getIsNotFinished} username={username} region={chosenRegion} />
-        ) : <>
-              { isGameStarted && !isNotFinished ? <div className="flex w-auto h-full flex-col">
+          <Container
+            initalizeFinish={initalizeFinish}
+            isNotFinished={getIsNotFinished}
+            username={username}
+            region={chosenRegion}
+            right={increaseRightQuestions}
+            rightCounter={rightQuestions}
+          />
+        ) : (
+          <>
+            {isGameStarted && !isNotFinished ? (
+              <div className="flex w-auto h-full flex-col">
                 <Image
-                src="/img/thinkinggif.gif"
-                alt="thinking"
-                width={300}
-                height={300}
+                  src="/img/thinkinggif.gif"
+                  alt="thinking_GAME"
+                  width={300}
+                  height={300}
+                  placeholder="blur"
+                  blurDataURL="/img/thinkinggif.gif"
+                  
+                />
 
-                placeholder="blur"
-                blurDataURL="/img/thinkinggif.gif"
-              /> 
+                <span className="text-3xl text-center text-dark_color">
+                  Game Over
+                </span>
 
-              <span className="text-4xl text-center text-dark_color">Game Over</span>
+                <p className="text-center my-3 text-lg">
+                  Username: <span className="text-custom_white font-semibold">{username}</span>   <br />
+                   Score: 
+                  <span className="text-custom_white font-semibold">
+                    {rightQuestions} / 10 
+                  </span>
+                </p>
 
-              <p className="text-center my-3 text-lg">Score: <span className="text-custom_white font-semibold">pipipipi</span>  </p>
-              
-              <div className="text-xl mt-2 flex flex-col w-full text-dank_brown h-auto">
-              <Button text="Play again" href="/game"/>
-              <Button text="See leaderboard" href="/leaderboard"/>
+                <div className="text-xl mt-2 flex flex-col w-full text-dank_brown h-auto">
+                  <Button text="Go back" href="/" />
+                </div>
               </div>
-             
-              </div> : <p>
-                imagen random
-              </p> }
-        </>
-        }
+            ) : null}
+          </>
+        )}
       </div>
     </Layout>
   );
