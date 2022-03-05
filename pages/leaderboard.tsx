@@ -1,23 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Layout from "../components/Layout";
-import axios from "axios";
 
-export default function Leaderboards() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
+export default function Leaderboards({data}:any) {
 
-  useEffect(() => {
-    axios
-      .get("https://guess-country-aa5b0b7to-markorodriguez.vercel.app/api/getScores")
-      .then((res) => {
-        setData(res.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Layout>
@@ -42,9 +29,9 @@ export default function Leaderboards() {
 
                 {data.map((item: any, index: number) => {
                   return (
-                    <div key={index} className="flex text-lg justify-around">
+                    <div key={index} className="flex text-lg justify-between">
                       <div className="text-custom_white">
-                        {index + 1}. {item.username}
+                        {index + 1}. { item.username}
                       </div>
                       <div className="text-custom_white">{item.score}</div>
                     </div>
@@ -57,4 +44,16 @@ export default function Leaderboards() {
       </div>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  const res = await fetch("https://guess-country-aa5b0b7to-markorodriguez.vercel.app/api/getScores");
+  const data = await res.json()
+  console.log(data)
+
+  return{
+    props: {
+      data
+    }
+  }
 }
