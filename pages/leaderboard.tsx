@@ -46,7 +46,7 @@ export default function Leaderboards({data}:any) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await fetch("https://guess-country-aa5b0b7to-markorodriguez.vercel.app/api/getScores");
   const data = await res.json()
   console.log(data)
