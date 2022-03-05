@@ -9,7 +9,7 @@ const Layout: NextPage = ({ children }) => {
         <title>Geo-Guess</title>
       </Head>
       <main>
-        <nav className="fixed bg-dank_yellow  w-full py-3">
+        <nav className="absolute top-0 bg-dank_yellow  w-full py-3">
           <div className="mx-auto w-5/6 md:container flex items-center justify-between  text-dark_color">
             <Link href="/"> 
               <a>
