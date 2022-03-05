@@ -29,7 +29,7 @@ export default function Game() {
       score: rightQuestions,
     }
 
-    axios.post("https://guess-country-aa5b0b7to-markorodriguez.vercel.app/api/sendScores", data).then((res)=>{
+    axios.post("/api/sendScores", data).then((res)=>{
       console.log(res.data)
     }).catch((err)=>{
       console.log(err)
