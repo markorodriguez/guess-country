@@ -44,10 +44,10 @@ const Home: NextPage = () => {
             height={200}
             alt={'thinking_HOME'}
           />
-          <h1 className="text-6xl font-semibold text-dark_color">GeoGuess</h1>
+          <h1 className="text-3xl md:text-6xl font-semibold text-dark_color">GeoGuess</h1>
 
-          <p className="text-2xl text-center my-4 text-custom_white">
-            A <span className="font-semibold">&quot funny &quot</span> game to test your
+          <p className="text-xl md:text-2xl text-center my-4 text-custom_white">
+            A <span className="font-semibold">{`"funny"`}</span> game to test your
             geography knowledge.
           </p>
           <div className="my-8">

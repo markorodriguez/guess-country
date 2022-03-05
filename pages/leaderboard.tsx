@@ -9,7 +9,7 @@ export default function Leaderboards() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/getScores")
+      .get("https://guess-country-aa5b0b7to-markorodriguez.vercel.app/api/getScores")
       .then((res) => {
         setData(res.data);
         setIsLoading(false);
